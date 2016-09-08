@@ -13,7 +13,9 @@ class JobspiderSpider(CrawlSpider):
 
     rules = (
         Rule(LinkExtractor(allow=r'jobs.52job.com'), callback='parse_item'),
+        Rule(LinkExtractor(  ))
     )
+
 
     def parse_item(self, response):
         # text = response.body
