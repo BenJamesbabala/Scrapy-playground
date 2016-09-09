@@ -12,7 +12,7 @@ class PythonjobsItem(Item):
     # define the fields for your item here like:
     # name = scrapy.Field()
     title = Field()
-    url = Field()
     city = Field()
     company = Field()
     location = Field()
+    url = Field()
