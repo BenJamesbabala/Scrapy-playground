@@ -1,36 +1,28 @@
 # -*- coding: utf-8 -*-
 import scrapy
-import chardet
-from scrapy.linkextractors import LinkExtractor
-from scrapy.spiders import CrawlSpider, Rule
 from pythonJobs.items import PythonjobsItem
-from scrapy.contrib.loader import ItemLoader
+from bs4 import BeautifulSoup
 
-class JobspiderSpider(CrawlSpider):
+class JobspiderSpider(scrapy.Spider):
     name = 'jobSpider'
     allowed_domains = ['search.51job.com','jobs.51job.com']
-    start_urls = ['http://search.51job.com/list/000000,000000,0000,00,9,99,python,2,1.html']
+    start_urls = ['http://search.51job.com']
 
-    rules = (
-        Rule(LinkExtractor(allow=r'jobs.52job.com'), callback='parse_item'),
-        Rule(LinkExtractor(  ))
-    )
+    def start_requests(self):
+        for i in xrange(1,2):              # number of pages
+            url = "http://search.51job.com/list/000000,000000,0000,00,9,99,python,2,{0}.html".format(i)
+            yield scrapy.Request(url)
 
+    def parse(self, response):
+        for sel in response.css("html body div.dw_wp div#resultList.dw_table div.el p.t1 span a"):
+            url  = sel.re('href="(.*?)"')[0]
+            yield scrapy.Request(url,callback=self.parse_item)
 
     def parse_item(self, response):
-        # text = response.body
-        # content_type = chardet.detect(text)
-        # if content_type['encoding'].lower() != 'utf-8':
-        #     text = text.decode(content_type['encoding'])
-        # text = text.encode('utf-8')
-        # response = response.replace(body=text)
-        i = ItemLoader(item=PythonjobsItem(),response=response)
-        i.add_xpath('title','//div[@class="in"]/div[@class="cn"]/h1/@title')
-        i.add_value('url',response.url)
-        i.add_xpath('city','//div[@class="in"]/div[@class="cn"]/span[@class="lname"]/text()')
-        i.add_xpath('company','//div[@class="in"]/div[@class="cn"]/p[@class="cname"]/a/text()')
-        i.add_xpath('location','')
-        #i['domain_id'] = response.xpath('//input[@id="sid"]/@value').extract()
-        #i['name'] = response.xpath('//div[@id="name"]').extract()
-        #i['description'] = response.xpath('//div[@id="description"]').extract()
-        return i
+        item = PythonjobsItem()
+        item['title'] = response.xpath('//div[@class="cn"]/h1/@title').extract()[0]
+        item['url'] = response.url
+        item['city'] = response.xpath('//span[@class="lname"]/text()').extract()[0]
+        item['company'] = response.xpath('//p[@class="cname"]/a/@title').extract()[0]
+        item['location'] = response.xpath('//p[@class="fp"]/text()').extract()[1].rstrip()
+        return item

@@ -16,7 +16,7 @@ NEWSPIDER_MODULE = 'pythonJobs.spiders'
 
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
-#USER_AGENT = 'pythonJobs (+http://www.yourdomain.com)'
+USER_AGENT = 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:48.0) Gecko/20100101 Firefox/48.0'
 
 # Obey robots.txt rules
 ROBOTSTXT_OBEY = True
@@ -39,10 +39,11 @@ COOKIES_ENABLED = False
 #TELNETCONSOLE_ENABLED = False
 
 # Override the default request headers:
-#DEFAULT_REQUEST_HEADERS = {
-#   'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-#   'Accept-Language': 'en',
-#}
+DEFAULT_REQUEST_HEADERS = {
+   'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+   'Accept-Language': 'en',
+    'Connection': 'keep-alive'
+}
 
 # Enable or disable spider middlewares
 # See http://scrapy.readthedocs.org/en/latest/topics/spider-middleware.html
@@ -52,10 +53,10 @@ COOKIES_ENABLED = False
 
 # Enable or disable downloader middlewares
 # See http://scrapy.readthedocs.org/en/latest/topics/downloader-middleware.html
-DOWNLOADER_MIDDLEWARES = {
-    'pythonJobs.middleware.httpProxyDownloaderMiddle':350,
-    'scrapy.conrib.downloadermiddleware.httpproxy.HttpProxyMiddleware':400
-}
+# DOWNLOADER_MIDDLEWARES = {
+#     'pythonJobs.middlewares.httpProxyDownloaderMiddleware':350,
+#     'scrapy.conrib.downloadermiddleware.httpproxy.HttpProxyMiddleware':400
+# }
 
 # Enable or disable extensions
 # See http://scrapy.readthedocs.org/en/latest/topics/extensions.html
@@ -65,9 +66,9 @@ DOWNLOADER_MIDDLEWARES = {
 
 # Configure item pipelines
 # See http://scrapy.readthedocs.org/en/latest/topics/item-pipeline.html
-#ITEM_PIPELINES = {
-#    'pythonJobs.pipelines.SomePipeline': 300,
-#}
+ITEM_PIPELINES = {
+    'pythonJobs.pipelines.PythonjobsPipeline': 300,
+}
 
 # Enable and configure the AutoThrottle extension (disabled by default)
 # See http://doc.scrapy.org/en/latest/topics/autothrottle.html
@@ -84,8 +85,13 @@ DOWNLOADER_MIDDLEWARES = {
 
 # Enable and configure HTTP caching (disabled by default)
 # See http://scrapy.readthedocs.org/en/latest/topics/downloader-middleware.html#httpcache-middleware-settings
-#HTTPCACHE_ENABLED = True
+HTTPCACHE_ENABLED = True
 #HTTPCACHE_EXPIRATION_SECS = 0
 #HTTPCACHE_DIR = 'httpcache'
 #HTTPCACHE_IGNORE_HTTP_CODES = []
 #HTTPCACHE_STORAGE = 'scrapy.extensions.httpcache.FilesystemCacheStorage'
+
+# Feed Exports
+FEED_URI = "file:///export.csv"
+FEED_FORMAT = 'csv'
+FEED_EXPORT_FIELDS = ['title','city','company','location',"url"]

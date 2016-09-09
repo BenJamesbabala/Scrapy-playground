@@ -16,6 +16,3 @@ class PythonjobsItem(Item):
     city = Field()
     company = Field()
     location = Field()
-    description = Field()
-    salary_lower = Field()
-    salary_upper = Field()
