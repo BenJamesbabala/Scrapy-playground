@@ -1,6 +1,4 @@
-
-/.idea/misc.xml
-/.idea/modules.xml
-/.idea/pythonJobs.iml
-/.idea/workspace.xml
 /.idea/*
+/PythonJobs/.scrapy
+/PythonJobs/Items.db
+/PythonJobs-Visualization/Items.db

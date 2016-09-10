@@ -9,7 +9,7 @@ class JobspiderSpider(scrapy.Spider):
     start_urls = ['http://search.51job.com']
 
     def start_requests(self):
-        for i in xrange(1,2):              # number of pages
+        for i in xrange(1,20):              # Set pages to crawl here.
             url = "http://search.51job.com/list/000000,000000,0000,00,9,99,python,2,{0}.html".format(i)
             yield scrapy.Request(url)
 
