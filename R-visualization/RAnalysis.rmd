@@ -36,6 +36,7 @@ missing_sum <- nrow(geo_job) - sum(index)
 missing_geo <- geo_job[index==FALSE,c(2,3,4,7)]
 head(missing_geo)
 ```
+`r missing_sum` job records are missing latitude and longtitude.
 
 ### Missing lat and lon for cities
 ```{r }
@@ -53,9 +54,9 @@ city <- arrange(city,desc(count))
 p <- ggplot(data=city[1:20,],aes(city,count)) + geom_bar(fill='blue',stat = "identity") + labs(x="City",y="Count",title="Python Jobs Count by City")
 ggplotly(p)
 ```
+The top 5 cities with most python jobs are `r city$city[1:5]`.
 
 # Sum by City - ScaterGeo
-
 ```{r}
 city$hover <- paste(city$city,': ',city$count," python jobs")
 quan <- quantile(city$count)
@@ -77,12 +78,13 @@ plot_ly(city, lon = lon, lat = lat, text = hover,
         color = q, type = 'scattergeo',locationmode="china") %>%
   layout(title = 'Python Jobs Count by Cites', geo = g)
 ```
+Sum of python jobs in a city is represented as the size of circle. Note that this map is interactive. You could click the quantiles in the top right of this map to hide or show related circles.
 
 ## leaflet
-
 ```{r }
 m <- leaflet() 
 m <- addTiles(m) 
 m <- addMarkers(m, complete_geo$lon, lat=complete_geo$lat, popup=paste('<br>',"<a href='", complete_geo$url, "'>" , complete_geo$title,"</a>",'<br>',complete_geo$company))
 m
 ```
+This map shows exactly where each job is located. You could click on marker to get URL of each job, which I think is the most amazing part.
