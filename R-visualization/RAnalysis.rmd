@@ -20,11 +20,11 @@ library(ggplot2)
 library(plotly)
 library(dplyr)
 library(leaflet)
-file <- "./Items.db"
+file <- "../data/Items.db"
 driver <- dbDriver("SQLite")
 conn <- dbConnect(driver,file)
 city <- dbGetQuery(conn,'SELECT * FROM cities')
-geo_job <- dbGetQuery(conn,'SELECT geo_job.url,geo_job.lat,geo_job.lon,jobs.title,jobs.company,jobs.city,jobs.location  FROM geo_job,jobs WHERE geo_job.url==jobs.url')
+geo_job <- dbGetQuery(conn,'SELECT url,lat,lon,title,company,city,location  FROM geo_job INNER JOIN jobs ON geo_job.id_foreign==jobs.id')
 ```
 
 ## Missing Lat and Lon
