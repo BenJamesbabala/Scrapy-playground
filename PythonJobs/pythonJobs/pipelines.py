@@ -34,11 +34,12 @@ class sqlitePipeline(object):
             itemTable = Table('jobs',MetaData(engine),autoload=True)
         except Exception:
             itemTable = Table('jobs',MetaData(engine),
+                          Column('id',INTEGER,primary_key=True),
                           Column('title',VARCHAR(30)),
                           Column('city',VARCHAR(10)),
                           Column('company',VARCHAR(100)),
                           Column('location',VARCHAR(100)),
-                          Column('url',VARCHAR(60),primary_key=True)
+                          Column('url',VARCHAR(60))
                           )
             itemTable.create()
         Session = sessionmaker()
