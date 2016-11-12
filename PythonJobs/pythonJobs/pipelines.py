@@ -46,9 +46,6 @@ class sqlitePipeline(object):
         self.session = Session()
         mapper(OrmObject,itemTable)
 
-    def __del__(self):
-        self.session.close()
-
     def process_item(self,item,spider):
         # print '-'*70
         # print item
@@ -59,5 +56,8 @@ class sqlitePipeline(object):
             for key, value in item.items():
                 record.__dict__[key]=value
             self.session.add(record)
-            self.session.commit()
         return item
+
+    def close_spider(self,spider):
+        self.session.commit()
+        self.session.close()

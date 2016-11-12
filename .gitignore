@@ -4,3 +4,4 @@
 /PythonJobs-Visualization/Items.db
 /R-visualization/.Rhistory
 /R-visualization/rsconnect/documents/RAnalysis.rmd/rpubs.com/rpubs/Publish Document.dcf
+*.pyc

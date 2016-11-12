@@ -6,7 +6,6 @@ from bs4 import BeautifulSoup
 class JobspiderSpider(scrapy.Spider):
     name = 'jobSpider'
     allowed_domains = ['search.51job.com','jobs.51job.com']
-    start_urls = ['http://search.51job.com']
 
     def start_requests(self):
         for i in xrange(1,20):              # Set pages to crawl here.
