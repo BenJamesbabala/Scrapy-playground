@@ -57,7 +57,7 @@ try:
             ip_record.check=datetime.datetime.strptime(tds[9].text, "%y-%m-%d %H:%M")
             if not session.query(IP).filter(IP.ip==ip_record.ip).filter(IP.port==ip_record.port).all():
                 session.add(ip_record)
-                session.commit()
+            session.commit()
         print "{0} pages sucessfully crawled!".format(count).center(50,'-')
     session.close()
     print "Finish!".center(50,'-')
