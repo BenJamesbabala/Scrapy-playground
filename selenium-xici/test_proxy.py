@@ -6,6 +6,7 @@ import urllib
 from bs4 import BeautifulSoup
 from sqlalchemy import or_
 import socket
+printf = sys.stdout.write
 
 socket.setdefaulttimeout(20)
 my_db = httpProxyDownloaderMiddleware()
@@ -18,16 +19,16 @@ try:
             'http': 'http://{0}:{1}'.format(ip,port)
         }
         try:
-            print "{0}th crawling".format(i)
+            printf("{0}th crawling".format(i))
             handler = urllib.urlopen("http://www.baidu.com",proxies = proxies)
             html = handler.read()
         except Exception,e:
-            print e
+            printf(str(e))
             fail+=1
             my_db.session.query(IP).filter(IP.ip == ip).filter(IP.port == port).delete()
             my_db.session.commit()
-            print "fail"
-            print '-'*30
+            printf("fail")
+            printf('-'*30)
             continue
 
         soup=BeautifulSoup(html,'lxml')
@@ -35,15 +36,15 @@ try:
             my_db.session.query(IP).filter(IP.ip==ip).filter(IP.port==port).delete()
             my_db.session.commit()
             fail+=1
-            print "fail"
-            print '-' * 30
+            printf("fail")
+            printf('-' * 30)
         else:
             success +=1
-            print "success"
-            print '-'*30
-        print "%d of %d" % (i,my_db.count_ips)
+            printf("success")
+            printf('-'*30)
+        printf("%d of %d" % (i,my_db.count_ips))
 except KeyboardInterrupt,e:
-    print e
+    printf(str(e))
 finally:
     my_db.session.close()
-print "{0} of {1} proxies success, {2} proxies fail!".format(success,my_db.count_ips,fail)
+printf("{0} of {1} proxies success, {2} proxies fail!".format(success,my_db.count_ips,fail))

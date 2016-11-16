@@ -27,9 +27,9 @@ class httpProxyDownloaderMiddleware(object):
         self.count_ips = self.session.query(IP).count()
 
     def get_proxy(self):
-        ip = self.session.query(IP.ip,IP.port).filter(IP.proxy_type=='HTTP').limit(1).offset(self.offset).one()
-
-        if not ip:
+        try:
+            ip = self.session.query(IP.ip,IP.port).filter(IP.proxy_type=='HTTP').limit(1).offset(self.offset).one()
+        except Exception,e:
             self.offset=0
             ip = self.session.query(IP.ip, IP.port).filter(IP.proxy_type == 'HTTP').limit(1).offset(self.offset).one()
 
