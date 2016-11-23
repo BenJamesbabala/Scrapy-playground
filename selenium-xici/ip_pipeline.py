@@ -44,6 +44,7 @@ class Ip_pipeline(object):
         self.current = 0
         self.count_ips = self.session.query(IP).count()
 
+    # TODO: last row is not used.
     def get_proxy(self, proxy_type): # proxy_type = 'HTTP' or 'HTTPS'
         try:
             ip = self.session.query(IP.ip,IP.port).filter(IP.proxy_type==proxy_type).limit(1).offset(self.offset).one()
