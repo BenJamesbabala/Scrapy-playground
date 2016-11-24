@@ -27,11 +27,13 @@ for i in xrange(1, num_page+1):
     trs = tree.xpath("//tr[position()>1]")
     for tr in trs:
         ip_record = IP()
-        ip_record.ip = tr.xpath("td")[1].text
+        ip_record.ip = tr.xpath("td")[1].text.decode("utf-8")
         printf(ip_record.ip + '\n')
-        ip_record.port = tr.xpath("td")[2].text
-        ip_record.address = tr.xpath("td[4]/a")[0].text
-        ip_record.proxy_type = tr.xpath("td")[5].text
+        ip_record.port = int(tr.xpath("td")[2].text)
+        address_list = tr.xpath("td[4]/descendant::text()")
+        address = reduce(lambda x,y: x+y, address_list)
+        ip_record.address = address.strip()
+        ip_record.proxy_type = tr.xpath("td")[5].text.decode("utf-8")
         ip_record.speed = tr.xpath("td")[6].xpath("div/@title")[0][:-1]
         ip_record.connection = tr.xpath("td")[7].xpath("div/@title")[0][:-1]
         ip_record.dur = tr.xpath("td")[8].text
