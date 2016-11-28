@@ -30,6 +30,7 @@ try:
             if pipeline.offset >0:
                 pipeline.offset -= 1
             printf("fail" + '\n')
+            printf("%d of %d" % (i + 1, pipeline.count_ips) + '\n')
             printf('-'*30 + '\n')
             continue
 
