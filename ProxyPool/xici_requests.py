@@ -38,4 +38,5 @@ for i in xrange(1, num_page+1):
         ip_record.connection = tr.xpath("td")[7].xpath("div/@title")[0][:-1]
         ip_record.dur = tr.xpath("td")[8].text
         ip_record.check = datetime.datetime.strptime(tr.xpath("td")[9].text, "%y-%m-%d %H:%M")
-        pipeline.save_proxy(ip_record)
+        # pipeline.save_proxy(ip_record)
+        # TODO: TEST before saving

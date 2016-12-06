@@ -1,7 +1,7 @@
 #! -*- encoding:utf-8 -*-
 from sqlalchemy import *
 from sqlalchemy.orm import *
-from sqlite3 import dbapi2 as sqlite
+import pymysql
 import sys
 printf = sys.stdout.write
 
@@ -20,7 +20,7 @@ class Ip_pipeline(object):
 
 
     def __init__(self):
-        self.engine = create_engine("sqlite:///ips.db",encoding="utf-8")
+        self.engine = create_engine("mysql+pymysql://root:root@localhost/proxies?charset=utf8")
         try:
             self.iptable = Table('ips', MetaData(self.engine), autoload=True)
         except Exception:
@@ -39,19 +39,21 @@ class Ip_pipeline(object):
         self.Session=sessionmaker(bind=self.engine)
         self.session = Session()
         mapper(IP,self.iptable)
-        self.offset = 0
         self.count_ips = self.session.query(IP).count()
 
 
     def get_proxy(self, proxy_type): # proxy_type = 'HTTP' or 'HTTPS'
-        try:
-            ip = self.session.query(IP.ip,IP.port).filter(IP.proxy_type==proxy_type).limit(1).offset(self.offset).one()
-        except Exception,e:
-            self.offset=0
-            ip = self.session.query(IP.ip, IP.port).filter(IP.proxy_type == proxy_type).limit(1).offset(self.offset).one()
-        finally:
-            self.offset += 1
-        return ip
+        while True:
+            query = self.session.query(IP).filter(IP.proxy_type==proxy_type).yield_per(10)
+            for ip in IP:
+                yield [ip.ip,ip.port]
+        # try:
+        #     ip = self.session.query(IP.ip,IP.port).filter(IP.proxy_type==proxy_type).limit(1).offset(self.offset).one()
+        # except Exception,e:
+        #     self.offset=0
+        #     ip = self.session.query(IP.ip, IP.port).filter(IP.proxy_type == proxy_type).limit(1).offset(self.offset).one()
+        # finally:
+        #     self.offset += 1
 
     def save_proxy(self, proxy_item):  # proxy_item 为IP 对象
         if self.session.query(IP).filter(IP.ip == proxy_item.ip).count() != 0:  # 去重
@@ -72,6 +74,5 @@ class Ip_pipeline(object):
             printf("Proxy not in db.")
 
     def __del__(self):
-        self.session.commit()
         self.session.close()
 	printf("\ncommit by ip pipeline\n".center(50,"-")+'\n')
