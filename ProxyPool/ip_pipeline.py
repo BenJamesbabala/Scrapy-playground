@@ -63,6 +63,7 @@ class Ip_pipeline(object):
             self.session.add(proxy_item)
             self.session.commit()  # have to commit here or in the next iteration, query won't be able to find the item added
         except:
+            self.session.rollback()
             return None
 
     def delete_proxy(self, ip):
